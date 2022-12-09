@@ -21,9 +21,9 @@ dt_idx = pd.date_range(start = "20160101", end = "20211231").strftime("%Y%m").un
 url = 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade'
 result = []
 
-for gu in seoul:
+for code in seoul:
 	for time in dt_idx:
-		params ={'serviceKey' : 'p1P0B3ibG2uL6TW+45WMf4a+m7RlOtGZ0EPKaKzNli19nRSFzcNeKTa4b2tN+QV41ftTRUcLNPyTXQDncg5evw==', 'LAWD_CD' : gu, 'DEAL_YMD' : time}
+		params ={'serviceKey' : 'p1P0B3ibG2uL6TW+45WMf4a+m7RlOtGZ0EPKaKzNli19nRSFzcNeKTa4b2tN+QV41ftTRUcLNPyTXQDncg5evw==', 'LAWD_CD' : code, 'DEAL_YMD' : time}
 		response = requests.get(url, params=params)
 		content = response.content
 
