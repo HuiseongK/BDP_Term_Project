@@ -20,7 +20,7 @@ result = []
 
 for code in seoul:
 	for time in dt_idx:
-		params ={'serviceKey' : 'p1P0B3ibG2uL6TW+45WMf4a+m7RlOtGZ0EPKaKzNli19nRSFzcNeKTa4b2tN+QV41ftTRUcLNPyTXQDncg5evw==', 'LAWD_CD' : str(code), 'DEAL_YMD' : str(time)}
+		params ={'serviceKey' : 'nDUMBR5fMmNgDxhE7WUdh5l1arh4KV4ZtK25GI3qixbSv1k7tQfEkIl1v4SXP1QPDZEVKABovfNrUh9EHR1nIQ==', 'LAWD_CD' : str(code), 'DEAL_YMD' : str(time)}
 		response = requests.get(url, params=params)
 		content = response.content
 
