@@ -24,7 +24,7 @@ if __name__ == "__main__":
 	print(columns)
 	
 	vecAssembler = VectorAssembler(inputCols = columns, outputCol = "price")
-	lr = LinearRegression(featuresCol = "price", labelCol = "거래금액").setMaxIter(10).setRegParam(0.2).setElasticNetParam(0.9)
+	lr = LinearRegression(featuresCol = "price", labelCol = "거래금액").setMaxIter(100).setRegParam(0.4).setElasticNetParam(0.9)
 	trainDF, testDF = droped.randomSplit([0.8, 0.2], seed = 42)
 	print(trainDF.cache().count())
 	print(trainDF.count())
