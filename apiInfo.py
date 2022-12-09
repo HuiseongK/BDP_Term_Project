@@ -12,6 +12,9 @@ from urllib.parse import urlencode, quote_plus, unquote
 # 동대문구, 동작구, 마포구, 서대문구, 서초구, 성동구, 성북구, 송파구, 양천구, 영등포구
 # 용산구, 은평구, 종로구, 중구, 중랑구
 seoul = [11680, 11740, 11305, 11500, 11620, 11215, 11530, 11545, 11350, 11320, 11230, 11590 , 11440, 11410, 11650, 11200, 11290, 11710, 11470, 11560, 11170, 11380, 11110, 11260]
+gu = ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구"
+      "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구"
+      "용산구", "은평구", "종로구", "중구", "중랑구"]
 
 dt_idx = pd.date_range(start = "20160101", end = "20211231").strftime("%Y%m").unique().tolist()
 
@@ -43,7 +46,7 @@ for gu in seoul:
 			value_list=[]
 
 		# to df
-		df = pd.DataFrame(row_list, columns=name_list)
+		df = pd.DataFrame(row_list, columns=name_list)		
 		result.append(df)
 
 data = pd.concat(result, axis = 0).to_csv("seoul.csv", index = None, mode = "w")
