@@ -16,7 +16,7 @@ inferSchema="true", header="true")
 inferSchema="true", header="true")
 	price = spark.read.load("consumerPrice.csv",format="csv", sep=",",
 inferSchema="true", header="true")
-	seoul_pre  = spark.read.load("seoul_pre1.csv",format="csv", sep=",",
+	seoul_pre  = spark.read.load("seoul_pre2.csv",format="csv", sep=",",
 inferSchema="true", header="true")
 	dongCode  = spark.read.load("dongCode.csv",format="csv", sep=",",
 inferSchema="true", header="true")
@@ -37,22 +37,10 @@ inferSchema="true", header="true")
 			col('계약시작일'),
 			col('공급위치').alias('공급위치1')
 			)
-	count1 = count.groupBy("공급위치1")\
-			.agg(F.mean("공급규모").alias("공급규모1"))
-	count1 = count1.select(
-			col("공급위치1").alias("공급위치3"),
-			col("공급규모1")
-			)
-	count1.show()
 
 	preprocess=seoul_df.withColumn("청약접수시작일",
 			regexp_replace("청약접수시작일","-",""))
-	preprocess1=preprocess.groupBy("공급위치")\
-			.agg(F.mean("경쟁률").alias("경쟁률1"))
-	preprocess1=preprocess1.select(
-			col('공급위치').alias('공급위치2'),
-			col('경쟁률1')
-			)
+
 	preprocess=preprocess.groupBy("공급위치","청약접수시작일")\
 			.agg(F.mean("경쟁률").alias("경쟁률"))
 									 
@@ -86,7 +74,6 @@ inferSchema="true", header="true")
 	
 	join_df=join_df.drop(col("dong"))
 	join_df=join_df.drop(col("year_month"))
-	join_df.show()
 
 	join_df=join_df.withColumn("경쟁률",when(col("경쟁률").isNull(),0)\
 			.otherwise(col("경쟁률")))
@@ -103,15 +90,20 @@ inferSchema="true", header="true")
 	
 	join_df=join_df.where(col('공급위치')=='강남구')
 	join_df=join_df.drop(col("공급위치"))
-	join_df=join_df.drop(col("date"))
 
-	join_df.show(400)
+	join_df=join_df.select(
+		col('공급규모'),
+		col('경쟁률'),
+		col('거래금액'),
+		col('data').alias('소비자물가'),
+		col('date').alias('time')
+	)
 
 	feature_list = join_df.columns 
 	feature_list.remove("거래금액") 
 
-	vecAssembler = VectorAssembler(inputCols=feature_list, outputCol="test") 
-	lr = LinearRegression(featuresCol="test",
+	vecAssembler = VectorAssembler(inputCols=feature_list, outputCol="features") 
+	lr = LinearRegression(featuresCol="features",
 			labelCol="거래금액").setMaxIter(10).setRegParam(0.3).setElasticNetParam(0.8) 
 	trainDF, testDF = join_df.randomSplit([0.8, 0.2], seed=42)
 
