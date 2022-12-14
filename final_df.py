@@ -95,7 +95,8 @@ inferSchema="true", header="true")
 	join_df=join_df.withColumn("거래금액",when(col("거래금액").isNull(),0)\
 			 .otherwise(col("거래금액")))
 	#서울의 구를 임의로 입력해서 원하는 구의 정보를 얻을 수 있다.
-	join_df=join_df.where(col('공급위치')=='강남구')
+	gu_value = "강남구"
+	join_df=join_df.where(col('공급위치')==gu_value)
 	#mulitful regression에 필요없는 요소를 제외한다.
 	join_df=join_df.drop(col("공급위치"))
 	#필요한 컬럼들만 select한다.
@@ -125,11 +126,13 @@ inferSchema="true", header="true")
 	#예측컬럼과 실제값을 출력한다.
 	predAndLabel = predDF.select("prediction","거래금액")
 	predAndLabel.show()
-
+	
 	evaluator = RegressionEvaluator()
 	evaluator.setPredictionCol("prediction")
 	evaluator.setLabelCol("거래금액")
 	#r제곱 score의 값으로 모델의 정확도를 나타낸다. mae와 rmse도 출력한다.
-	print(evaluator.evaluate(predAndLabel, {evaluator.metricName: "r2"}))
-	print(evaluator.evaluate(predAndLabel, {evaluator.metricName: "mae"}))
-	print(evaluator.evaluate(predAndLabel, {evaluator.metricName: "rmse"}))
+	print(gu_value + " 집값 예측 모델 지표")
+	r2_adj = 1 - (((join_df.count() - 1) * (1 - r2)) / (join_df.count() - 4 - 1))
+	print("adjusted r2: " + str(r2_adj))
+	print("MAE: " + str(evaluator.evaluate(predAndLabel, {evaluator.metricName: "mae"})))
+	print("RMSE: " + str(evaluator.evaluate(predAndLabel, {evaluator.metricName: "rmse"})))
