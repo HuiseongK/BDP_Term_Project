@@ -132,6 +132,7 @@ inferSchema="true", header="true")
 	evaluator.setLabelCol("거래금액")
 	#r제곱 score의 값으로 모델의 정확도를 나타낸다. mae와 rmse도 출력한다.
 	print(gu_value + " 집값 예측 모델 지표")
+	r2 = evaluator.evaluate(predAndLabel, {evaluator.metricName: "r2"})
 	r2_adj = 1 - (((join_df.count() - 1) * (1 - r2)) / (join_df.count() - 4 - 1))
 	print("adjusted r2: " + str(r2_adj))
 	print("MAE: " + str(evaluator.evaluate(predAndLabel, {evaluator.metricName: "mae"})))
